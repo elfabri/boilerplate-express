@@ -1,6 +1,7 @@
 let express = require('express');
 let app = express();
 require('dotenv').config();
+let bodyParser = require('body-parser');
 
 console.log("Hello World");
 
@@ -10,7 +11,7 @@ let pubPath = __dirname + "/public";
 app.use("/", function(req, res, next) {
     console.log(`${req.method} ${req.path} - ${req.ip}`);
     next();
-})
+}, bodyParser.urlencoded({extended: false}))
 
 app.use("/public", express.static(pubPath));
 
@@ -40,6 +41,12 @@ app.get("/:word/echo", function(req, res) {
 app.get("/name", function(req, res) {
     let firstname = req.query.first;
     let lastname = req.query.last;
+    res.json({"name": `${firstname} ${lastname}`});
+})
+
+app.post("/name", function(req, res) {
+    let firstname = req.body.first;
+    let lastname = req.body.last;
     res.json({"name": `${firstname} ${lastname}`});
 })
 
